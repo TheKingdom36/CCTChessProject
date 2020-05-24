@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+   name: moveevaluator
+   labels:
+    environment: test
+    app: moveevaluator
+spec:
+   containers:
+    - name: moveevaluator
+      image: kingdom36/moveevaluator
+      ports:
+        - containerPort: 8080
+
+        
+        
+      
