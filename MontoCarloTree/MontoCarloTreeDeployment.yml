@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: montocarlotree-deployment
+  labels:
+    app: chessai
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: montocarlotree
+      env: training
+  template:
+    metadata:
+      name: montocarlotree
+      labels:
+        app: montocarlotree
+        env: training
+    spec:
+      containers:
+      - name: montocarlotree
+        image: kingdom36/montocarlotree
+        ports:
+        - containerPort: 8080
