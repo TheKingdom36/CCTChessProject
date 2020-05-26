@@ -13,19 +13,19 @@ public class NetworkedMontoCarloTree implements IMontoCarloTree {
     @Override
     public Move findNextMove(BoardState boardState, long searchTime) {
         String url = "http://"+ Configuration.prop.get("DetermineNextBestMoveEndpoint");
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> plane = new HashMap<>();
 
-        map.put("boardState",boardState);
-        map.put("searchTime",searchTime);
+        plane.put("boardState",boardState);
+        plane.put("searchTime",searchTime);
 
-        Move move = (Move)PostRequestService.HttpPost(url,map);
+        Move move = (Move)PostRequestService.HttpPost(url,plane);
         return move;
     }
 
     @Override
     public MontoCarloTrainingOutput findNextMoveTraining(BoardState boardState, long searchTime) {
         String url = "http://"+ Configuration.prop.get("GenerateTrainingSampleEndpoint");
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
 
         map.put("boardState",boardState);
         map.put("searchTime",searchTime);

@@ -13,9 +13,8 @@ import chess.ai.Common.neuralNet.Models.NNOutput;
 import chess.ai.Common.neuralNet.Output.AllPieceMoveOptions;
 import chess.ai.Common.neuralNet.Util.ConvertBoardToWhite;
 import chess.ai.Common.neuralNet.Util.ConvertMoveToBlack;
-import org.springframework.stereotype.Component;
 
-@Component
+
 public class MontoCarloTree implements IMontoCarloTree {
 
 

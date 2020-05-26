@@ -11,6 +11,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -24,7 +25,8 @@ public class NetworkUpdaterController {
 
 
     @PostMapping("ProcessTrainingSamples")
-    public void ProcessTrainingData(List<TrainingSample> trainingSamples){
-        networkUpdateService.processSamples(trainingSamples);
+    public void ProcessTrainingData(@RequestBody List<TrainingSample> trainingSamples){
+        List<TrainingSample> samples = (List<TrainingSample>)trainingSamples;
+        networkUpdateService.processSamples(samples);
     }
 }
