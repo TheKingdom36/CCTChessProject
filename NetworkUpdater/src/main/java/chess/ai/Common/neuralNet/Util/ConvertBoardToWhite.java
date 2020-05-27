@@ -8,15 +8,13 @@ import chess.ai.Common.ChessBoard.Util.PieceFactory;
 
 public class ConvertBoardToWhite {
     public static Board Convert(Board board){
-        //Always want the input in perspective of white player. after the neural network completes the output is then mapped to blacks perspective
+        //Always want the input in perspective of white player. after the neural network completes the output is then planeped to blacks perspective
                 Board flippedBoard = board.Copy();
 
                 InvertPieceColors(flippedBoard);
                 RotateBoard(flippedBoard);
 
                 return  flippedBoard;
-
-
     }
 
 
@@ -32,9 +30,7 @@ public class ConvertBoardToWhite {
                 }
             }
         }
-
     }
-
     private static void RotateBoard(Board board){
 
         SwapRows(board,0,7);

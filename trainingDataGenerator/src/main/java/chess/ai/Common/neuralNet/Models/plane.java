@@ -2,20 +2,20 @@ package chess.ai.Common.neuralNet.Models;
 
 import java.util.Random;
 
-public class plane {
+public class Plane {
     private double[][] values;
     private int width;
     private int height;
     static Random rand = new Random();
     private int paddingSize;
 
-    public plane(int width, int height){
+    public Plane(int width, int height){
         values = new double[width][height];
         this.width = width;
         this.height = height;
     }
 
-    public plane(int width, int height,boolean randomValues,int min,int max){
+    public Plane(int width, int height, boolean randomValues, int min, int max){
         values = new double[width][height];
         this.width = width;
         this.height = height;
@@ -87,15 +87,15 @@ public class plane {
         }
     }
 
-    public static plane ConvertplanesToplane(plane[] planes, int newplaneWidth, int newplaneHeight){
-        plane plane = new plane(newplaneWidth,newplaneHeight);
+    public static Plane ConvertPlanesToPlane(Plane[] Planes, int newplaneWidth, int newplaneHeight){
+        Plane plane = new Plane(newplaneWidth,newplaneHeight);
 
         int pos =0;
         int widthPos=0;
         int heightPos=0;
-        for(int i=0;i<planes.length;i++){
-            for(int j=0;j<planes[0].getWidth();j++){
-                for(int k=0;k<planes[0].getHeight();k++){
+        for(int i = 0; i< Planes.length; i++){
+            for(int j = 0; j< Planes[0].getWidth(); j++){
+                for(int k = 0; k< Planes[0].getHeight(); k++){
                     if(pos>newplaneWidth*newplaneHeight){
                         return plane;
                     }
@@ -107,7 +107,7 @@ public class plane {
                             return plane;
                         }
                     }
-                    plane.setValue(widthPos,heightPos,planes[i].getValues()[j][k]);
+                    plane.setValue(widthPos,heightPos, Planes[i].getValues()[j][k]);
                     pos++;
                     widthPos++;
                 }

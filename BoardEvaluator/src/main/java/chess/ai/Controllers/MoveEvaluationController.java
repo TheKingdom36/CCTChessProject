@@ -37,17 +37,5 @@ public class MoveEvaluationController  {
         return boardEvaluateService.EvaluateBatchOfBoards(boardStates);
     }
 
-    @Autowired
-    RedisObjectStorer r;
-    @GetMapping("start")
-    public void an(){
-        NetworkWeights w = new NetworkWeights(true);
-        r.storeObject("NetworkWeights",w);
-    }
-    /*@GetMapping("Test")
-    public String index(){
-        NetworkUpdates updates= redisTemplate.opsForValue().get("FC");
-        updates.getKernels()[0].Print();
-        return "You want nothing you got nothing!!!!";
-    }*/
+
 }

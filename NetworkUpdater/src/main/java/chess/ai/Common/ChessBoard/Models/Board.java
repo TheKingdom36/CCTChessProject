@@ -13,7 +13,7 @@ import chess.ai.Common.ChessBoard.Util.PieceFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Board implements Comparable<Board>{
+public class Board implements Comparable<Board> {
     private BoardSquare[][] boardSquares;
     private Position WhiteKing;
     private Position BlackKing;
@@ -102,6 +102,7 @@ public class Board implements Comparable<Board>{
     }
 
     public List<Move> GetAllAvailableMoves(Color color)  {
+
         return CheckForMovesToProtectKing(color);
     }
 
@@ -128,7 +129,6 @@ public class Board implements Comparable<Board>{
                 safeMoves.add(m);
             }
             this.UndoMove(m);
-
 
         }
 

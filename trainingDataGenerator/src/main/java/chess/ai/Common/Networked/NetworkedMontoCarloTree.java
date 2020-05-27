@@ -18,7 +18,7 @@ public class NetworkedMontoCarloTree implements IMontoCarloTree {
         plane.put("boardState",boardState);
         plane.put("searchTime",searchTime);
 
-        Move move = (Move)PostRequestService.HttpPost(url,plane);
+        Move move = (Move)PostRequestService.PostMap(url,plane);
         return move;
     }
 
@@ -30,7 +30,7 @@ public class NetworkedMontoCarloTree implements IMontoCarloTree {
         map.put("boardState",boardState);
         map.put("searchTime",searchTime);
 
-        MontoCarloTrainingOutput montoCarloTrainingOutput = (MontoCarloTrainingOutput)PostRequestService.HttpPost(url,map);
+        MontoCarloTrainingOutput montoCarloTrainingOutput = (MontoCarloTrainingOutput)PostRequestService.PostMap(url,map);
         return montoCarloTrainingOutput;
     }
 }

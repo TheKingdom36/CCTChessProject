@@ -10,7 +10,7 @@ import lombok.Setter;
 
 import java.util.List;
 
-public class Piece implements Comparable<Piece>{
+public class Piece implements Comparable<Piece> {
 
     @Getter @Setter private Color color;
     @Setter private MoveChecker mvChecker;

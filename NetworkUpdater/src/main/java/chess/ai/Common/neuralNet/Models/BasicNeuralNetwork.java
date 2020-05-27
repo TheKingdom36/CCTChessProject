@@ -20,22 +20,18 @@ public class BasicNeuralNetwork implements INeuralNetwork {
     BatchNormLayer batchNormLayer2;
     BatchNormLayer batchNormLayer3;
 
-
     ConvLayer convLayer1;
-
-
     ConvLayer convLayer2;
 
+    ReLULayer ReLULayer ;
+    ReLULayer ReLULayer2 ;
+    ReLULayer ReLULayer3;
 
-    chess.ai.Common.neuralNet.Layers.ReLULayer ReLULayer ;
-    chess.ai.Common.neuralNet.Layers.ReLULayer ReLULayer2 ;
-    chess.ai.Common.neuralNet.Layers.ReLULayer ReLULayer3;
+    OutputLayer outputLayer;
 
-    OutputLayer output;
+    public BasicNeuralNetwork(){
 
-public BasicNeuralNetwork(){
-
-}
+    }
 
     public BasicNeuralNetwork(NetworkWeights networkWeights){
         this.Configuration(networkWeights);
@@ -47,16 +43,16 @@ public BasicNeuralNetwork(){
         Layer.setBatchSize(1);
 
 
-        Map[][] inputMaps = new Map[1][1];
-        inputMaps[0]= ChessInputConverter.ConvertChessBoardToInput(boardState);
-        inputLayer = new InputLayer(inputMaps);
+        Plane[][] inputplanes = new Plane[1][1];
+        inputplanes[0]= ChessInputConverter.ConvertChessBoardToInput(boardState);
+        inputLayer = new InputLayer(inputplanes);
 
         inputLayer.setNextLayer(convLayer1);
 
         convLayer1.setPreviousLayer(inputLayer);
 
-        output.CalculateOutputMaps();
-        Map[][] policy= output.getPolicy();
+        outputLayer.CalculateOutputplanes();
+        Plane[][] policy= outputLayer.getPolicy();
 
         double[] probs = new double[policy[0][0].getWidth()];
         for(int i=0;i<policy[0][0].getWidth();i++){
@@ -64,8 +60,7 @@ public BasicNeuralNetwork(){
         }
 
         nnOutput.setProbabilities(probs);
-        nnOutput.setWin_score(output.getValues()[0][0].getValues()[0][0]);
-
+        nnOutput.setWin_score(outputLayer.getValues()[0][0].getValues()[0][0]);
 
         return nnOutput;
     }
@@ -79,23 +74,23 @@ public BasicNeuralNetwork(){
 
         Layer.setBatchSize(boardStates.size());
 
-        Map[][] inputMaps = new Map[boardStates.size()][21];
+        Plane[][] inputplanes = new Plane[boardStates.size()][21];
 
         for(int i=0; i< boardStates.size();i++){
 
-            inputMaps[i]= ChessInputConverter.ConvertChessBoardToInput(boardStates.get(i));
+            inputplanes[i]= ChessInputConverter.ConvertChessBoardToInput(boardStates.get(i));
         }
 
-        inputLayer = new InputLayer(inputMaps);
+        inputLayer = new InputLayer(inputplanes);
 
         inputLayer.setNextLayer(convLayer1);
 
         convLayer1.setPreviousLayer(inputLayer);
 
-        output.CalculateOutputMaps();
+        outputLayer.CalculateOutputplanes();
 
-        Map[][] policys= output.getPolicy();
-        Map[][] values = output.getValues();
+        Plane[][] policys= outputLayer.getPolicy();
+        Plane[][] values = outputLayer.getValues();
 
         double[] tempProbs;
         NNOutput tempNNOutput;
@@ -142,7 +137,7 @@ public BasicNeuralNetwork(){
         batchNormLayer3.setBeta(networkWeights.batchNorm3BetaValues);
         batchNormLayer3.setGamma(networkWeights.batchNorm3GammaValues);
 
-        //number of input planes theres 21 input maps
+        //number of input planes theres 21 input planes
         convLayer1 = new ConvLayer(10,1,3,3,21,1);
         convLayer1.setKernels(networkWeights.getConv1Kernels());
 
@@ -153,10 +148,10 @@ public BasicNeuralNetwork(){
         ReLULayer2 = new ReLULayer();
         ReLULayer3 = new ReLULayer();
 
-        output = new OutputLayer(20, AllPieceMoveOptions.getMoveOptions().size());
-        output.setKernels(networkWeights.getOutputKernels());
-        output.setPolicyKernels(networkWeights.getPolicyHeadKernels());
-        output.setValueKernels(networkWeights.getValueHeadKernels());
+        outputLayer = new OutputLayer(20, AllPieceMoveOptions.getMoveOptions().size());
+        outputLayer.setKernels(networkWeights.getOutputKernels());
+        outputLayer.setPolicyKernels(networkWeights.getPolicyHeadKernels());
+        outputLayer.setValueKernels(networkWeights.getValueHeadKernels());
 
         convLayer1.setNextLayer(batchNormLayer1);
 
@@ -182,40 +177,14 @@ public BasicNeuralNetwork(){
         batchNormLayer3.setNextLayer(ReLULayer3);
 
         ReLULayer3.setPreviousLayer(batchNormLayer3);
-        ReLULayer3.setNextLayer(output);
+        ReLULayer3.setNextLayer(outputLayer);
 
-        output.setPreviousLayer(ReLULayer3);
+        outputLayer.setPreviousLayer(ReLULayer3);
 
 
     }
 
-    /*
-   static Kernel[] kernelsFCLayer;
-   static Kernel[] kernelsConvLayer2;
-   static Kernel[] kernelsConvLayer;
-   static Kernel[] kernelsOutput;
 
-    public void StaticConfiguration(){
-
-
-        if(kernelsConvLayer==null){
-
-            kernelsConvLayer = intializeKernels(10,3,3,21);
-        }
-        if (kernelsConvLayer2==null){
-            kernelsConvLayer2 = intializeKernels(10,3,3,10);
-
-        }
-
-        if(kernelsFCLayer==null){
-            kernelsFCLayer = intializeKernels(1,20,640,1);
-
-        }
-        if(kernelsOutput==null){
-            kernelsOutput = intializeKernels(1,20,20,1);
-        }
-    }
-*/
     @Override
     public Layer GetInputLayer() {
         return inputLayer;
@@ -224,7 +193,7 @@ public BasicNeuralNetwork(){
     public synchronized void AssignNewWeights(NetworkWeights networkWeights){
         convLayer1.setKernels(networkWeights.getConv1Kernels());
         convLayer2.setKernels(networkWeights.getConv2Kernels());
-        output.setKernels(networkWeights.getOutputKernels());
+        outputLayer.setKernels(networkWeights.getOutputKernels());
         fcLayer1.setKernels(networkWeights.getFCKernels());
         batchNormLayer1.setBeta(networkWeights.batchNorm1BetaValues);
         batchNormLayer2.setBeta(networkWeights.batchNorm2BetaValues);
@@ -239,7 +208,7 @@ public BasicNeuralNetwork(){
     public NetworkWeights UpdateWeights() {
         convLayer1.UpdateWeights();
         convLayer2.UpdateWeights();
-        output.UpdateWeights();
+        outputLayer.UpdateWeights();
         fcLayer1.UpdateWeights();
         batchNormLayer1.UpdateWeights();
         batchNormLayer2.UpdateWeights();
@@ -255,7 +224,7 @@ public BasicNeuralNetwork(){
         networkWeights.setConv1Kernels(convLayer1.getKernels());
         networkWeights.setConv2Kernels(convLayer2.getKernels());
         networkWeights.setFCKernels(fcLayer1.getKernels());
-        networkWeights.setOutputKernels(output.getKernels());
+        networkWeights.setOutputKernels(outputLayer.getKernels());
         networkWeights.setBatchNorm1GammaValues(batchNormLayer1.getGamma());
         networkWeights.setBatchNorm2GammaValues(batchNormLayer2.getGamma());
         networkWeights.setBatchNorm3GammaValues(batchNormLayer3.getGamma());
@@ -266,7 +235,7 @@ public BasicNeuralNetwork(){
         return networkWeights;
     }
 
-    private Kernel[] intializeKernels(int numOfKernels, int kernalWidth, int kernalHeight, int kernalDepth){
+    private Kernel[] initializeKernels(int numOfKernels, int kernalWidth, int kernalHeight, int kernalDepth){
 
             Kernel[] kernels = new Kernel[numOfKernels];
 

@@ -29,9 +29,9 @@ public class BasicNeuralNetwork implements INeuralNetwork {
 
     OutputLayer outputLayer;
 
-public BasicNeuralNetwork(){
+    public BasicNeuralNetwork(){
 
-}
+    }
 
     public BasicNeuralNetwork(NetworkWeights networkWeights){
         this.Configuration(networkWeights);
@@ -43,7 +43,7 @@ public BasicNeuralNetwork(){
         Layer.setBatchSize(1);
 
 
-        plane[][] inputplanes = new plane[1][1];
+        Plane[][] inputplanes = new Plane[1][1];
         inputplanes[0]= ChessInputConverter.ConvertChessBoardToInput(boardState);
         inputLayer = new InputLayer(inputplanes);
 
@@ -52,7 +52,7 @@ public BasicNeuralNetwork(){
         convLayer1.setPreviousLayer(inputLayer);
 
         outputLayer.CalculateOutputplanes();
-        plane[][] policy= outputLayer.getPolicy();
+        Plane[][] policy= outputLayer.getPolicy();
 
         double[] probs = new double[policy[0][0].getWidth()];
         for(int i=0;i<policy[0][0].getWidth();i++){
@@ -74,7 +74,7 @@ public BasicNeuralNetwork(){
 
         Layer.setBatchSize(boardStates.size());
 
-        plane[][] inputplanes = new plane[boardStates.size()][21];
+        Plane[][] inputplanes = new Plane[boardStates.size()][21];
 
         for(int i=0; i< boardStates.size();i++){
 
@@ -89,8 +89,8 @@ public BasicNeuralNetwork(){
 
         outputLayer.CalculateOutputplanes();
 
-        plane[][] policys= outputLayer.getPolicy();
-        plane[][] values = outputLayer.getValues();
+        Plane[][] policys= outputLayer.getPolicy();
+        Plane[][] values = outputLayer.getValues();
 
         double[] tempProbs;
         NNOutput tempNNOutput;
@@ -184,33 +184,7 @@ public BasicNeuralNetwork(){
 
     }
 
-    /*
-   static Kernel[] kernelsFCLayer;
-   static Kernel[] kernelsConvLayer2;
-   static Kernel[] kernelsConvLayer;
-   static Kernel[] kernelsOutput;
 
-    public void StaticConfiguration(){
-
-
-        if(kernelsConvLayer==null){
-
-            kernelsConvLayer = intializeKernels(10,3,3,21);
-        }
-        if (kernelsConvLayer2==null){
-            kernelsConvLayer2 = intializeKernels(10,3,3,10);
-
-        }
-
-        if(kernelsFCLayer==null){
-            kernelsFCLayer = intializeKernels(1,20,640,1);
-
-        }
-        if(kernelsOutput==null){
-            kernelsOutput = intializeKernels(1,20,20,1);
-        }
-    }
-*/
     @Override
     public Layer GetInputLayer() {
         return inputLayer;
@@ -261,7 +235,7 @@ public BasicNeuralNetwork(){
         return networkWeights;
     }
 
-    private Kernel[] intializeKernels(int numOfKernels, int kernalWidth, int kernalHeight, int kernalDepth){
+    private Kernel[] initializeKernels(int numOfKernels, int kernalWidth, int kernalHeight, int kernalDepth){
 
             Kernel[] kernels = new Kernel[numOfKernels];
 

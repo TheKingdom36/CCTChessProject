@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moveevaluator-deployment
+  labels:
+    app: chessai
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: boardevaluator
+      env: training
+  template:
+    metadata:
+      name: boardevaluator
+      labels:
+        app: boardevaluator
+        env: training
+    spec:
+      containers:
+      - name: boardevaluator
+        image: kingdom36/boardevaluator
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          - name: config-volume
+            mountPath: /usr/src/BoardEvaluator/config.d
+      volumes:
+      - name: config-volume
+        configMap:
+          name: config
+          restartPolicy: Never

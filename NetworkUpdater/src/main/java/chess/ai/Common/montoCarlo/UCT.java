@@ -10,12 +10,12 @@ import java.util.List;
 
 public class UCT {
 
-    public static double uctValue(int totalVisit, double nodeWinScore, int nodeVisit,double probOFTakingAction,Boolean isActive) {
+    public static double uctValue(int totalVisit, double nodeWinScore, int nodeVisit, double probOFTakingAction, Boolean isActive) {
         if (nodeVisit == 0) {
             return Integer.MAX_VALUE;
         }
 
-        //TODO change UCT score
+
         if(isActive == true){
             return nodeWinScore  + 2 *probOFTakingAction* Math.sqrt(Math.log(totalVisit) /1+ (double) nodeVisit);
         }else{

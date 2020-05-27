@@ -1,7 +1,7 @@
 package chess.ai.Common.neuralNet.Layers;
 
 import chess.ai.Common.neuralNet.Models.Kernel;
-import chess.ai.Common.neuralNet.Models.Map;
+import chess.ai.Common.neuralNet.Models.Plane;
 
 public class ConvLayer extends Layer {
     private int numOfKernels;
@@ -39,11 +39,11 @@ public class ConvLayer extends Layer {
 
 
 
-    public void CalculateOutputMaps() {
+    public void CalculateOutputplanes() {
 
-        previousLayer.CalculateOutputMaps();
+        previousLayer.CalculateOutputplanes();
 
-        Map[][] inputMaps = previousLayer.outputMaps;
+        Plane[][] inputplanes = previousLayer.outputplanes;
 
         if(kernels==null){
             System.out.println("In kernels");
@@ -55,11 +55,11 @@ public class ConvLayer extends Layer {
         }
 
 
-        outputMaps = new Map[Layer.getBatchSize()][numOfKernels];
+        outputplanes = new Plane[Layer.getBatchSize()][numOfKernels];
 
         for(int i = 0; i< Layer.getBatchSize(); i++){
             for(int j=0;j<kernels.length;j++){
-                this.outputMaps[i][j] = new Map((inputMaps[0][0].getWidth()- kernels[0].getWidth()/stride)+1,(inputMaps[0][0].getHeight()- kernels[0].getHeight()/stride)+1);
+                this.outputplanes[i][j] = new Plane((inputplanes[0][0].getWidth()- kernels[0].getWidth()/stride)+1,(inputplanes[0][0].getHeight()- kernels[0].getHeight()/stride)+1);
             }
         }
 
@@ -69,21 +69,21 @@ public class ConvLayer extends Layer {
         for(int batchElement = 0; batchElement< Layer.getBatchSize(); batchElement++){
             for(int kernelNum=0;kernelNum<kernels.length;kernelNum++){
                 outy=0;
-                for(int i=1;i<inputMaps[batchElement][0].getWidth()-1;i=i+stride){
+                for(int i=1;i<inputplanes[batchElement][0].getWidth()-1;i=i+stride){
                     outx=0;
-                    for(int j=1;j<inputMaps[batchElement][0].getHeight()-1;j=j+stride){
+                    for(int j=1;j<inputplanes[batchElement][0].getHeight()-1;j=j+stride){
                         newValue=0;
 
-                        for(int k=0;k<inputMaps[batchElement].length;k++){
+                        for(int k=0;k<inputplanes[batchElement].length;k++){
                             for(int kerneli=-kernels[kernelNum].getWidth()/2;kerneli<=kernels[kernelNum].getWidth()/2;kerneli++){
                                 for(int kernelj=-kernels[kernelNum].getHeight()/2;kernelj<=kernels[kernelNum].getHeight()/2;kernelj++){
 
-                                    newValue += inputMaps[batchElement][k].getValues()[i + kerneli][j + kernelj] * kernels[kernelNum].getValues()[k][(kernels[kernelNum].getWidth() / 2) + kerneli][(kernels[kernelNum].getHeight() / 2) + kernelj];
+                                    newValue += inputplanes[batchElement][k].getValues()[i + kerneli][j + kernelj] * kernels[kernelNum].getValues()[k][(kernels[kernelNum].getWidth() / 2) + kerneli][(kernels[kernelNum].getHeight() / 2) + kernelj];
                                 }
                             }
                         }
 
-                        outputMaps[batchElement][kernelNum].setValue(outx,outy,newValue);
+                        outputplanes[batchElement][kernelNum].setValue(outx,outy,newValue);
                         outx++;
                     }
                     outy++;
@@ -96,7 +96,7 @@ public class ConvLayer extends Layer {
 
         for(int i = 0; i< Layer.getBatchSize(); i++){
             for(int j=0;j<kernels.length;j++){
-                this.outputMaps[i][j].addPadding(padding);
+                this.outputplanes[i][j].addPadding(padding);
             }
         }
 
@@ -129,7 +129,7 @@ public class ConvLayer extends Layer {
                             for(int errorWidth = 0; errorWidth<(errors[batchElement][kernelNum].length)-2; errorWidth++){
                                                                                                     //2=the kernel height-1
                                 for(int errorHeight = 0; errorHeight<(errors[batchElement][kernelNum][0].length)-2; errorHeight++) {
-                                 cal += errors[batchElement][kernelNum][errorWidth][errorHeight] * previousLayer.getOutputMaps()[batchElement][kernelDepth].getValues()[errorWidth + (1 + width)][errorHeight + (1+height)];
+                                 cal += errors[batchElement][kernelNum][errorWidth][errorHeight] * previousLayer.getOutputPlanes()[batchElement][kernelDepth].getValues()[errorWidth + (1 + width)][errorHeight + (1+height)];
                                 }
                             }
 

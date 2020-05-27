@@ -4,7 +4,7 @@ package chess.ai.Common.neuralNet.Util;
 import chess.ai.Common.ChessBoard.Enums.Color;
 import chess.ai.Common.ChessBoard.Models.Board;
 import chess.ai.Common.neuralNet.Models.BoardState;
-import chess.ai.Common.neuralNet.Models.Map;
+import chess.ai.Common.neuralNet.Models.Plane;
 
 /*
 * Pawn
@@ -39,25 +39,27 @@ import chess.ai.Common.neuralNet.Models.Map;
 *
 * no progress count
 * */
+
+/**
+ * Used to transform a chessBoard into a stack of planes
+ */
 public class ChessInputConverter {
 
 
-    public static Map[] ConvertChessBoardToInput(BoardState boardState) {
-
-
+    public static Plane[] ConvertChessBoardToInput(BoardState boardState) {
 
         Board board = boardState.getBoard().Copy();
 
 
-        Map[] input = new Map[21];
+        Plane[] input = new Plane[21];
 
         for(int i=0;i<input.length;i++){
-            input[i] = new Map(8,8);
+            input[i] = new Plane(8,8);
         }
 
         int plane_index=0;
 
-        //Create pieces maps for each state
+        //Create pieces planes for each state
 
 
             for(int j=0;j<8;j++){

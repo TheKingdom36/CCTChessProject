@@ -2,7 +2,7 @@ package chess.ai.Common.neuralNet.Layers;
 
 
 import chess.ai.Common.neuralNet.ActivationFunctions.Softmax;
-import chess.ai.Common.neuralNet.Models.plane;
+import chess.ai.Common.neuralNet.Models.Plane;
 
 public class PolicyHead extends FullyConnectedLayer {
 
@@ -34,7 +34,7 @@ public class PolicyHead extends FullyConnectedLayer {
         SoftmaxValues = new double[Layer.getBatchSize()][numOfOutputNodes];
 
         if(outputplanes == null) {
-            outputplanes = new plane[Layer.getBatchSize()][1];
+            outputplanes = new Plane[Layer.getBatchSize()][1];
         }
         for(int batchElement = 0; batchElement< Layer.getBatchSize(); batchElement++){
             outputplanes[batchElement][0] = CalculationPerBatchElement(batchElement);
@@ -45,11 +45,11 @@ public class PolicyHead extends FullyConnectedLayer {
     }
 
     @Override
-    protected plane CalculationPerBatchElement(int batchElement) {
-
-        plane inputplane = plane.ConvertplanesToplane(getPreviousLayer().getOutputplanes()[batchElement],getPreviousLayer().getOutputplanes()[batchElement].length*getPreviousLayer().getOutputplanes()[batchElement][0].getWidth()*getPreviousLayer().getOutputplanes()[batchElement][0].getHeight(),1);
-        plane returnplane = new plane(numOfHiddenNodes,1);
-
+    protected Plane CalculationPerBatchElement(int batchElement) {
+        Plane inputplane = Plane.ConvertPlanesToPlane(getPreviousLayer().getOutputPlanes()[batchElement],
+                getPreviousLayer().getOutputPlanes()[batchElement].length*getPreviousLayer().getOutputPlanes()[batchElement][0].getWidth()*getPreviousLayer().getOutputPlanes()[batchElement][0].getHeight(),
+                1);
+        Plane returnplane = new Plane(numOfHiddenNodes,1);
         if(weights == null){
             RandomlyInitializeWeights(inputplane.getHeight()*inputplane.getWidth());
         }
@@ -63,14 +63,11 @@ public class PolicyHead extends FullyConnectedLayer {
 
             returnplane.setValue(i,0,tempValue);
         }
-
-
         SoftmaxValues[batchElement] = new double[returnplane.getWidth()];
 
         for(int i=0;i<returnplane.getWidth();i++){
             SoftmaxValues[batchElement][i] = returnplane.getValues()[i][0];
         }
-
 
         SoftmaxValues[batchElement] = Softmax.calculate(SoftmaxValues[batchElement]);
 
@@ -90,7 +87,7 @@ public class PolicyHead extends FullyConnectedLayer {
         for(int batchElement = 0; batchElement< Layer.getBatchSize(); batchElement++) {
             for (int currWidth = 0; currWidth < this.numOfHiddenNodes; currWidth++) {
 
-                errors[batchElement][0][currWidth][0] = learningRate*(SoftmaxValues[batchElement][currWidth] - actualPolicy[batchElement][currWidth]);
+                errors[batchElement][0][currWidth][0] = learningRate*(1/Layer.getBatchSize())*(SoftmaxValues[batchElement][currWidth] - actualPolicy[batchElement][currWidth]);
             }
         }
     }

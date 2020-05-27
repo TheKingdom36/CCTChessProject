@@ -8,8 +8,8 @@ import java.util.Properties;
 
 public class Configuration {
     public static final Properties prop = new Properties();
-    private static String fileName = "/usr/src/trainingDataGenerator/config.d/trainingConfig";
-    private static String defaultConfigFileName = "src/main/resources/static/trainingConfig";
+    private static String fileName = "usr/src/BoardEvaluator/config.d";
+    private static String defaultConfigFileName = "src/main/resources/static/config";
 
     private static InputStream is = null;
 

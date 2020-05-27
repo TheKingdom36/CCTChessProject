@@ -15,7 +15,7 @@ public class UCT {
             return Integer.MAX_VALUE;
         }
 
-        //TODO change UCT score
+
         if(isActive == true){
             return nodeWinScore  + 2 *probOFTakingAction* Math.sqrt(Math.log(totalVisit) /1+ (double) nodeVisit);
         }else{

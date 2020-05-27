@@ -13,12 +13,13 @@ import chess.ai.Common.neuralNet.Models.NNOutput;
 import chess.ai.Common.neuralNet.Output.AllPieceMoveOptions;
 import chess.ai.Common.neuralNet.Util.ConvertBoardToWhite;
 import chess.ai.Common.neuralNet.Util.ConvertMoveToBlack;
-import org.springframework.stereotype.Component;
 
 
 public class MontoCarloTree implements IMontoCarloTree {
 
-
+    /**
+     * Network used to evaluate board states
+     */
     INeuralNetwork nn;
 
     public MontoCarloTree(INeuralNetwork neuralNetwork) {
@@ -39,6 +40,12 @@ public class MontoCarloTree implements IMontoCarloTree {
     }
 
 
+    /**
+     * Returns the best found move from a given boardState
+     * @param boardState board state to be evlauated
+     * @param searchTime length of time the monto carlo search tree should search
+     * @return
+     */
     public Move findNextMove(BoardState boardState, long searchTime) {
 
         long start = System.currentTimeMillis();
@@ -55,9 +62,9 @@ public class MontoCarloTree implements IMontoCarloTree {
         rootNode.getState().setIsActive(true);
         rootNode.getState().setPlayerColor(boardState.getPlayerColor());
 
-
+        //Perform 4 step mcst process until time is exceeded
         MCSTProcess(boardState, boardState.getPlayerColor(), end, rootNode);
-
+        //child of root which has highest value is the winner
         Node winnerNode = rootNode.getChildWithMaxScore();
 
         tree.setRoot(winnerNode);
@@ -73,6 +80,12 @@ public class MontoCarloTree implements IMontoCarloTree {
 
     }
 
+    /**
+     * Returns a TrainingOutput with the best determined move fro mthe current BoardState
+     * @param boardState board state to be evlauated
+     * @param searchTime length of time the monto carlo search tree should search
+     * @return MontoCarloTrainingOutput which holds move object and genrated policy by monto carlo search tree
+     */
     public MontoCarloTrainingOutput findNextMoveTraining(BoardState boardState, long searchTime) {
 
         long start = System.currentTimeMillis();
@@ -83,6 +96,7 @@ public class MontoCarloTree implements IMontoCarloTree {
             boardState.setBoard(ConvertBoardToWhite.Convert(boardState.getBoard()));
         }
 
+        //set Up root of tree
         Tree tree = new Tree();
         Node rootNode = tree.getRoot();
         rootNode.setState(new State(boardState));
@@ -90,13 +104,15 @@ public class MontoCarloTree implements IMontoCarloTree {
         rootNode.getState().setPlayerColor(boardState.getPlayerColor());
 
 
+        //Perform 4 step mcst process until time is exceeded
         MCSTProcess(boardState, boardState.getPlayerColor(), end, rootNode);
 
+        //child of root which has highest value is the winner
         Node winnerNode = rootNode.getChildWithMaxScore();
 
         tree.setRoot(winnerNode);
 
-        MontoCarloTrainingOutput output ;
+        MontoCarloTrainingOutput output;
 
         if(boardState.getPlayerColor() == Color.White){
             output = new MontoCarloTrainingOutput(new TrainingSample(),winnerNode.getState().getMove());
@@ -104,6 +120,7 @@ public class MontoCarloTree implements IMontoCarloTree {
             output = new MontoCarloTrainingOutput(new TrainingSample(), ConvertMoveToBlack.Convert(winnerNode.getState().getMove()));
         }
 
+        //final calculation of uct values to be returned as the generated policy
         double[] genPolicy = new double[State.getMovesOptions().size()];
         double genPolicyTotal=0;
 
@@ -138,20 +155,12 @@ public class MontoCarloTree implements IMontoCarloTree {
 
 
             // Phase 2 - Expansion
-
             expandNode(promisingNode);
 
             // Phase 3 - Neural Network evaluation
-
-
             if (promisingNode.getParent() != null) {
-
                 nnOutput = nn.EvaluateBoard(promisingNode.getState().getBoardState());
-
             } else {
-
-
-
                 nnOutput = nn.EvaluateBoard(promisingNode.getState().getBoardState());
             }
          /*   System.out.println();
@@ -183,12 +192,8 @@ public class MontoCarloTree implements IMontoCarloTree {
 
 
         while (node.getChildArray().size() != 0) {
-
             node = UCT.findBestNodeWithUCT(node);
         }
-
-
-
 
         return node;
     }

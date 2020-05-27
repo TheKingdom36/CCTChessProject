@@ -1,13 +1,13 @@
 package chess.ai.Common.neuralNet.Layers;
 
 import chess.ai.Common.neuralNet.Models.Kernel;
-import chess.ai.Common.neuralNet.Models.plane;
+import chess.ai.Common.neuralNet.Models.Plane;
 
 public class FullyConnectedLayer extends Layer {
     Kernel[] weights;
     int numOfHiddenNodes;
     int depthOfplanes;
-    plane[] inputplanesPerBatch;
+    Plane[] inputplanesPerBatches;
     boolean connectedToConvLayer;
     public Kernel[] getKernals() {
         return weights;
@@ -29,17 +29,17 @@ public class FullyConnectedLayer extends Layer {
         previousLayer.CalculateOutputplanes();
 
         if(weights==null){
-            RandomlyInitializeWeights(this.previousLayer.getOutputplanes()[0].length*previousLayer.getOutputplanes()[0][0].getWidth()*previousLayer.getOutputplanes()[0][0].getHeight());
+            RandomlyInitializeWeights(this.previousLayer.getOutputPlanes()[0].length*previousLayer.getOutputPlanes()[0][0].getWidth()*previousLayer.getOutputPlanes()[0][0].getHeight());
         }
 
-        outputplanes = new plane[Layer.getBatchSize()][1];
+        outputplanes = new Plane[Layer.getBatchSize()][1];
 
-        if(previousLayer.getOutputplanes()[0].length >1){
+        if(previousLayer.getOutputPlanes()[0].length >1){
             connectedToConvLayer=true;
         }
 
 
-        inputplanesPerBatch = new plane[Layer.getBatchSize()];
+        inputplanesPerBatches = new Plane[Layer.getBatchSize()];
         for(int batchElement = 0; batchElement< Layer.getBatchSize(); batchElement++){
             outputplanes[batchElement][0] = CalculationPerBatchElement(batchElement);
         }
@@ -48,11 +48,11 @@ public class FullyConnectedLayer extends Layer {
 
     }
 
-    protected plane CalculationPerBatchElement(int batchElement) {
-        plane returnplane = new plane(numOfHiddenNodes,1);
-        plane inputplane = plane.ConvertplanesToplane(getPreviousLayer().getOutputplanes()[batchElement],getPreviousLayer().getOutputplanes()[batchElement].length*getPreviousLayer().getOutputplanes()[batchElement][0].getWidth()*getPreviousLayer().getOutputplanes()[batchElement][0].getHeight(),1);
+    protected Plane CalculationPerBatchElement(int batchElement) {
+        Plane returnplane = new Plane(numOfHiddenNodes,1);
+        Plane inputplane = Plane.ConvertPlanesToPlane(getPreviousLayer().getOutputPlanes()[batchElement],getPreviousLayer().getOutputPlanes()[batchElement].length*getPreviousLayer().getOutputPlanes()[batchElement][0].getWidth()*getPreviousLayer().getOutputPlanes()[batchElement][0].getHeight(),1);
 
-        inputplanesPerBatch[batchElement] = inputplane;
+        inputplanesPerBatches[batchElement] = inputplane;
 
 
         double tempValue;
@@ -85,7 +85,7 @@ public class FullyConnectedLayer extends Layer {
         this.nextLayer.CalculateErrors();
         if(nextLayer instanceof FullyConnectedLayer){
             // number of batches  number of error planes, width of error planes, height of error planes
-            errors = new double[Layer.getBatchSize()][this.getOutputplanes()[0].length][this.getOutputplanes()[0][0].getValues().length][this.getOutputplanes()[0][0].getValues()[0].length];
+            errors = new double[Layer.getBatchSize()][this.getOutputPlanes()[0].length][this.getOutputPlanes()[0][0].getValues().length][this.getOutputPlanes()[0][0].getValues()[0].length];
 
             // if its a layer with weights/kernels needs to perform  calculation
             for(int batchElement = 0; batchElement< Layer.getBatchSize(); batchElement++) {
@@ -113,7 +113,7 @@ public class FullyConnectedLayer extends Layer {
                 for(int batchElement = 0; batchElement< Layer.getBatchSize(); batchElement++) {
 
                     for(int errorWidth=0;errorWidth<errors[batchElement][0].length;errorWidth++){
-                        double cal = weights[0].getValues()[0][errorWidth][height] - errors[batchElement][0][errorWidth][0]*inputplanesPerBatch[batchElement].getValues()[width][0];
+                        double cal = weights[0].getValues()[0][errorWidth][height] - errors[batchElement][0][errorWidth][0]* inputplanesPerBatches[batchElement].getValues()[width][0];
                         this.weights[0].setValue(0,width,height,cal);
                     }
                 }

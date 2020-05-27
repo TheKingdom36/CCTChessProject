@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class Position implements Comparable<Position>{
+public class Position implements Comparable<Position> {
     int x;
     int y;
 

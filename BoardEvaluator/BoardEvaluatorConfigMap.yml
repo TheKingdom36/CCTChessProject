@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: boardevaluator-config
+data:
+  boardEvaluatorURL = boardEvaluator
+  moveGeneratorURL = moveGeneator
+  trainingDataGenURL = trainingDataGenerator
+  networkUpdaterURL = networkUpdater
+  BoardEvaluateEndpoint = boardEvaluator/evaluateBoard
+  BatchOfBoardEvaluateEndpoint = boardEvaluato/evaluateBatchOfBoards
+  DetermineNextBestMoveEndpoint = moveGeneator/determineNextBestMove
+  GenerateTrainingSampleEndpoint = moveGeneator/generateTrainingSample
+  ProcessTrainingSamplesEndpoint = networkUpdater/processTrainingSamples
+  RedisDatabaseIP = 192.168.99.100
+  RedisDatabasePort = 80

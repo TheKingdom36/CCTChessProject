@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class PostRequestService {
 
-    public static NNOutput HttpPost(String url, BoardState boardState) {
+    public static NNOutput PostBoardState(String url, BoardState boardState) {
         //create restTemplate
         RestTemplate restTemplate = new RestTemplate();
 
@@ -22,15 +22,15 @@ public class PostRequestService {
 
         // check response status code
         if (response.getStatusCode() == HttpStatus.OK) {
-            System.out.println(response.getBody());
+            System.out.println(response.getBody() + "now");
             return response.getBody();
         } else {
-            System.out.println("Request Failed");
+            System.out.println("Request failed");
             return null;
         }
     }
 
-    public static BatchOfEvaluatedBoards HttpPost(String url, List<BoardState> boardStates) {
+    public static BatchOfEvaluatedBoards PostBoardStates(String url, List<BoardState> boardStates) {
         //create restTemplate
         RestTemplate restTemplate = new RestTemplate();
 
@@ -44,7 +44,7 @@ public class PostRequestService {
             System.out.println(response.getBody() + "now");
             return response.getBody();
         } else {
-            System.out.println("Request Failed");
+            System.out.println("Request failed");
             return null;
         }
     }
@@ -58,7 +58,7 @@ public class PostRequestService {
 
     }
 
-    public static Object HttpPost(String url, Map<String, Object> body) {
+    public static Object PostMap(String url, Map<String, Object> body) {
         //create restTemplate
         RestTemplate restTemplate = new RestTemplate();
 
@@ -71,7 +71,7 @@ public class PostRequestService {
             System.out.println(response.getBody() + "now");
             return response.getBody();
         } else {
-            System.out.println("Request Failed");
+            System.out.println("Request failed");
             return null;
         }
     }

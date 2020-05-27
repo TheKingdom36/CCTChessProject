@@ -11,6 +11,9 @@ import chess.ai.Common.neuralNet.Util.ConvertBoardToWhite;
 
 import java.util.List;
 
+/**
+ * Used to store board and metadata on the board
+ */
 public class BoardState {
 
     private Board board;

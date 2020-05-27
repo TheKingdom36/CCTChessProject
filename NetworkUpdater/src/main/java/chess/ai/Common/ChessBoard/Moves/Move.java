@@ -6,7 +6,7 @@ import chess.ai.Common.ChessBoard.Models.Position;
 import lombok.Getter;
 import lombok.Setter;
 
-public abstract class Move implements Comparable<Move>{
+public abstract class Move implements Comparable<Move> {
 
     @Getter @Setter protected Piece piece;
     @Getter @Setter protected Position to;

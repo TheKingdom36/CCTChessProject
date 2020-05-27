@@ -2,6 +2,9 @@ package chess.ai.Common.neuralNet.Models;
 
 import java.util.Arrays;
 
+/**
+ * Model used to store the output of the neural network
+ */
 public class NNOutput {
     double win_score;
     double[] probabilities;

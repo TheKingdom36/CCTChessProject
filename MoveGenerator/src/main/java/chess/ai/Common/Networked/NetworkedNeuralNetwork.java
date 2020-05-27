@@ -20,13 +20,13 @@ public class NetworkedNeuralNetwork implements INeuralNetwork {
 
     @Override
     public NNOutput EvaluateBoard(BoardState boardState) {
-        return (NNOutput) PostRequestService.HttpPost(Configuration.prop.getProperty("BoardEvaluateEndpoint"),boardState);
+        return (NNOutput) PostRequestService.PostBoardState(Configuration.prop.getProperty("BoardEvaluateEndpoint"),boardState);
 
     }
 
     @Override
     public BatchOfEvaluatedBoards EvaluateBatchOfBoards(List<BoardState> boardStates) {
-        BatchOfEvaluatedBoards evaluatedBoards = (BatchOfEvaluatedBoards) PostRequestService.HttpPost(Configuration.prop.getProperty("BatchOfBoardEvaluateEndpoint"),boardStates);
+        BatchOfEvaluatedBoards evaluatedBoards = (BatchOfEvaluatedBoards) PostRequestService.PostBoardStates(Configuration.prop.getProperty("BatchOfBoardEvaluateEndpoint"),boardStates);
         basicNeuralNetwork = evaluatedBoards.getBasicNeuralNetwork();
         return evaluatedBoards;
     }

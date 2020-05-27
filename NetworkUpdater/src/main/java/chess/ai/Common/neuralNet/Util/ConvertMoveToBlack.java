@@ -7,6 +7,9 @@ import chess.ai.Common.ChessBoard.Moves.*;
 import chess.ai.Common.ChessBoard.Util.ChessPosFactory;
 import chess.ai.Common.ChessBoard.Util.PieceFactory;
 
+/**
+ * Used to Convert a Move to Black form White
+ */
 public class ConvertMoveToBlack {
     public static Move Convert(Move move){
         Move newMove;

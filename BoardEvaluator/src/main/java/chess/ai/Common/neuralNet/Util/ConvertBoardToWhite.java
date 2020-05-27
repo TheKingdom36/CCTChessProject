@@ -15,8 +15,6 @@ public class ConvertBoardToWhite {
                 RotateBoard(flippedBoard);
 
                 return  flippedBoard;
-
-
     }
 
 
@@ -32,9 +30,7 @@ public class ConvertBoardToWhite {
                 }
             }
         }
-
     }
-
     private static void RotateBoard(Board board){
 
         SwapRows(board,0,7);

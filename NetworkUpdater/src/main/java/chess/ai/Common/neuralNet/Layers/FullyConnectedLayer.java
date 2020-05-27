@@ -1,13 +1,13 @@
 package chess.ai.Common.neuralNet.Layers;
 
 import chess.ai.Common.neuralNet.Models.Kernel;
-import chess.ai.Common.neuralNet.Models.Map;
+import chess.ai.Common.neuralNet.Models.Plane;
 
 public class FullyConnectedLayer extends Layer {
     Kernel[] weights;
     int numOfHiddenNodes;
-    int depthOfMaps;
-    Map[] inputMapsPerBatch;
+    int depthOfplanes;
+    Plane[] inputplanesPerBatches;
     boolean connectedToConvLayer;
     public Kernel[] getKernals() {
         return weights;
@@ -19,53 +19,53 @@ public class FullyConnectedLayer extends Layer {
 
     public FullyConnectedLayer(int numOfHiddenNodes){
         this.numOfHiddenNodes = numOfHiddenNodes;
-        depthOfMaps = 1;
+        depthOfplanes = 1;
     }
 
 
     @Override
-    public void CalculateOutputMaps() {
+    public void CalculateOutputplanes() {
 
-        previousLayer.CalculateOutputMaps();
+        previousLayer.CalculateOutputplanes();
 
         if(weights==null){
-            RandomlyInitializeWeights(this.previousLayer.getOutputMaps()[0].length*previousLayer.getOutputMaps()[0][0].getWidth()*previousLayer.getOutputMaps()[0][0].getHeight());
+            RandomlyInitializeWeights(this.previousLayer.getOutputPlanes()[0].length*previousLayer.getOutputPlanes()[0][0].getWidth()*previousLayer.getOutputPlanes()[0][0].getHeight());
         }
 
-        outputMaps = new Map[Layer.getBatchSize()][1];
+        outputplanes = new Plane[Layer.getBatchSize()][1];
 
-        if(previousLayer.getOutputMaps()[0].length >1){
+        if(previousLayer.getOutputPlanes()[0].length >1){
             connectedToConvLayer=true;
         }
 
 
-        inputMapsPerBatch = new Map[Layer.getBatchSize()];
+        inputplanesPerBatches = new Plane[Layer.getBatchSize()];
         for(int batchElement = 0; batchElement< Layer.getBatchSize(); batchElement++){
-            outputMaps[batchElement][0] = CalculationPerBatchElement(batchElement);
+            outputplanes[batchElement][0] = CalculationPerBatchElement(batchElement);
         }
 
 
 
     }
 
-    protected Map CalculationPerBatchElement(int batchElement) {
-        Map returnMap = new Map(numOfHiddenNodes,1);
-        Map inputMap = Map.ConvertMapsToMap(getPreviousLayer().getOutputMaps()[batchElement],getPreviousLayer().getOutputMaps()[batchElement].length*getPreviousLayer().getOutputMaps()[batchElement][0].getWidth()*getPreviousLayer().getOutputMaps()[batchElement][0].getHeight(),1);
+    protected Plane CalculationPerBatchElement(int batchElement) {
+        Plane returnplane = new Plane(numOfHiddenNodes,1);
+        Plane inputplane = Plane.ConvertPlanesToPlane(getPreviousLayer().getOutputPlanes()[batchElement],getPreviousLayer().getOutputPlanes()[batchElement].length*getPreviousLayer().getOutputPlanes()[batchElement][0].getWidth()*getPreviousLayer().getOutputPlanes()[batchElement][0].getHeight(),1);
 
-        inputMapsPerBatch[batchElement] = inputMap;
+        inputplanesPerBatches[batchElement] = inputplane;
 
 
         double tempValue;
         for(int i=0;i<numOfHiddenNodes;i++){
             tempValue=0;
-            for(int j=0;j<inputMap.getHeight()*inputMap.getWidth();j++){
-                   tempValue += inputMap.getValues()[j][0]*weights[0].getValues()[0][i][j];
+            for(int j=0;j<inputplane.getHeight()*inputplane.getWidth();j++){
+                   tempValue += inputplane.getValues()[j][0]*weights[0].getValues()[0][i][j];
             }
 
-            returnMap.setValue(i,0,tempValue);
+            returnplane.setValue(i,0,tempValue);
         }
 
-        return returnMap;
+        return returnplane;
     }
 
     protected void RandomlyInitializeWeights(int numOfInputNeurons) {
@@ -85,7 +85,7 @@ public class FullyConnectedLayer extends Layer {
         this.nextLayer.CalculateErrors();
         if(nextLayer instanceof FullyConnectedLayer){
             // number of batches  number of error planes, width of error planes, height of error planes
-            errors = new double[Layer.getBatchSize()][this.getOutputMaps()[0].length][this.getOutputMaps()[0][0].getValues().length][this.getOutputMaps()[0][0].getValues()[0].length];
+            errors = new double[Layer.getBatchSize()][this.getOutputPlanes()[0].length][this.getOutputPlanes()[0][0].getValues().length][this.getOutputPlanes()[0][0].getValues()[0].length];
 
             // if its a layer with weights/kernels needs to perform  calculation
             for(int batchElement = 0; batchElement< Layer.getBatchSize(); batchElement++) {
@@ -113,7 +113,7 @@ public class FullyConnectedLayer extends Layer {
                 for(int batchElement = 0; batchElement< Layer.getBatchSize(); batchElement++) {
 
                     for(int errorWidth=0;errorWidth<errors[batchElement][0].length;errorWidth++){
-                        double cal = weights[0].getValues()[0][errorWidth][height] - errors[batchElement][0][errorWidth][0]*inputMapsPerBatch[batchElement].getValues()[width][0];
+                        double cal = weights[0].getValues()[0][errorWidth][height] - errors[batchElement][0][errorWidth][0]* inputplanesPerBatches[batchElement].getValues()[width][0];
                         this.weights[0].setValue(0,width,height,cal);
                     }
                 }

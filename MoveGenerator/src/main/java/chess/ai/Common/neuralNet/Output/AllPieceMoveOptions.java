@@ -8,6 +8,10 @@ import chess.ai.Common.ChessBoard.Util.Directions;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Used to generate all possible move options on a chess board
+ * Including all queen moves , knight moves and pawn promotions moves
+ */
 public class AllPieceMoveOptions {
     static private List<MoveOption> moveOptions;
 

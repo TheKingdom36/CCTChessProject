@@ -1,5 +1,8 @@
 package chess.ai.Common.neuralNet.Training;
 
+/**
+ * An element used for training a neural network
+ */
 public class TrainingElement {
     private double guessedResult;
     private double actualResult;

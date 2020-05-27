@@ -23,7 +23,7 @@ public class DummyLayer extends Layer {
     }
 
     @Override
-    public void CalculateOutputMaps() {
+    public void CalculateOutputplanes() {
 
 
     }

@@ -2,14 +2,14 @@ package chess.ai.Common.neuralNet.Layers;
 
 
 import chess.ai.Common.neuralNet.Models.Kernel;
-import chess.ai.Common.neuralNet.Models.plane;
+import chess.ai.Common.neuralNet.Models.Plane;
 
 public class InputLayer extends Layer {
 
 
 
-    public InputLayer(plane[][] planes){
-        this.outputplanes = planes;
+    public InputLayer(Plane[][] Planes){
+        this.outputplanes = Planes;
 
     }
 

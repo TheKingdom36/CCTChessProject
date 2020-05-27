@@ -7,6 +7,9 @@ import lombok.Getter;
 
 import java.util.List;
 
+/**
+ * Training data contains training elements used for training a neural network
+ */
 public class TrainingData {
     @Getter
     TrainingElement[] trainingElements;

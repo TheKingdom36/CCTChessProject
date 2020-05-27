@@ -3,7 +3,7 @@ package chess.ai.Common.ChessBoard.Models;
 import lombok.Getter;
 import lombok.Setter;
 
-public class BoardSquare implements Comparable<BoardSquare>{
+public class BoardSquare implements Comparable<BoardSquare> {
     @Getter private Piece piece;
     @Getter @Setter
     private boolean hasPiece;

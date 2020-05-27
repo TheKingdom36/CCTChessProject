@@ -3,7 +3,7 @@ package chess.ai.Common.neuralNet.Layers;
 
 import chess.ai.Common.neuralNet.ActivationFunctions.ReLU;
 import chess.ai.Common.neuralNet.Models.Kernel;
-import chess.ai.Common.neuralNet.Models.Map;
+import chess.ai.Common.neuralNet.Models.Plane;
 
 public class ReLULayer extends Layer {
     ReLU reLU;
@@ -18,24 +18,24 @@ public class ReLULayer extends Layer {
     }
 
     @Override
-    public void CalculateOutputMaps() {
+    public void CalculateOutputplanes() {
 
-        previousLayer.CalculateOutputMaps();
+        previousLayer.CalculateOutputplanes();
 
-        outputMaps = new Map[Layer.getBatchSize()][previousLayer.getOutputMaps().length];
+        outputplanes = new Plane[Layer.getBatchSize()][previousLayer.getOutputPlanes().length];
 
 
         for(int batchElement = 0; batchElement< Layer.getBatchSize(); batchElement++){
-            outputMaps[batchElement]=CalculationPerBatchElement(batchElement);
+            outputplanes[batchElement]=CalculationPerBatchElement(batchElement);
         }
     }
 
 
-    private Map[] CalculationPerBatchElement(int batchElement) {
-        Map[] maps = previousLayer.getOutputMaps()[batchElement];
+    private Plane[] CalculationPerBatchElement(int batchElement) {
+        Plane[] Planes = previousLayer.getOutputPlanes()[batchElement];
 
         //Each value is being put through the leakyReLU to assign a new value
-        for(Map m: maps){
+        for(Plane m: Planes){
             for(int i=0;i<m.getWidth();i++){
                 for(int j=0;j<m.getHeight();j++){
                     m.setValue(i,j,reLU.getOutput(m.getValues()[i][j]));
@@ -43,7 +43,7 @@ public class ReLULayer extends Layer {
             }
         }
 
-        return maps;
+        return Planes;
     }
 
     public void CalculateErrors(){
@@ -53,7 +53,7 @@ public class ReLULayer extends Layer {
         //If its a conv layer do the conv error process
         if(nextLayer instanceof ConvLayer) {
             // number of batches  number of error planes, width of error planes, height of error planes
-            errors = new double[Layer.getBatchSize()][this.getOutputMaps()[0].length][this.getOutputMaps()[0][0].getWidth()][this.getOutputMaps()[0][0].getHeight()];
+            errors = new double[Layer.getBatchSize()][this.getOutputPlanes()[0].length][this.getOutputPlanes()[0][0].getWidth()][this.getOutputPlanes()[0][0].getHeight()];
 
             // if its a layer with weights/kernels needs to perform  calculation
 
@@ -72,14 +72,14 @@ public class ReLULayer extends Layer {
 
             for (int batchElement = 0; batchElement < nextErrors.length; batchElement++) {
                 for (int depth = 0; depth < nextErrors[0].length; depth++) {
-                    nextErrors[batchElement][depth] = extendMatrix(nextErrors[batchElement][depth], nextKernels[0].getWidth() - 1, nextKernels[0].getHeight()-1);
+                    nextErrors[batchElement][depth] = extendDoubleArray(nextErrors[batchElement][depth], nextKernels[0].getWidth() - 1, nextKernels[0].getHeight()-1);
                 }
             }
 
             double totalError;
             System.out.println();
             for (int batchElement = 0; batchElement < Layer.getBatchSize(); batchElement++) {
-                for (int kernelNum = 0; kernelNum < this.outputMaps[0].length; kernelNum++) {
+                for (int kernelNum = 0; kernelNum < this.outputplanes[0].length; kernelNum++) {
 
                     System.out.println();
                     // System.out.println(batchElement + " " + kernelNum + " " + getErrors()[batchElement][kernelNum].length);
@@ -87,7 +87,7 @@ public class ReLULayer extends Layer {
                         for (int j = 0; j < this.getErrors()[batchElement][kernelNum][i].length; j++) {
                             totalError = 0;
 
-                            if (this.outputMaps[batchElement][kernelNum].getValues()[i][j] > 0) {
+                            if (this.outputplanes[batchElement][kernelNum].getValues()[i][j] > 0) {
                                 for (int nextLayerKernelNum = 0; nextLayerKernelNum < nextKernels.length; nextLayerKernelNum++) {
                                     for (int weighti = -nextKernels[0].getWidth() / 2; weighti <= nextKernels[0].getWidth() / 2; weighti++) {
                                         for (int weightj = -nextKernels[0].getHeight() / 2; weightj <= nextKernels[0].getHeight() / 2; weightj++) {
@@ -111,7 +111,7 @@ public class ReLULayer extends Layer {
 
 
             // number of batches  number of error planes, width of error planes, height of error planes
-            errors = new double[Layer.getBatchSize()][1][this.getOutputMaps()[0].length*this.getOutputMaps()[0][0].getWidth()*this.getOutputMaps()[0][0].getHeight()][1];
+            errors = new double[Layer.getBatchSize()][1][this.getOutputPlanes()[0].length*this.getOutputPlanes()[0][0].getWidth()*this.getOutputPlanes()[0][0].getHeight()][1];
 
             // if its a layer with weights/kernels needs to perform  calculation
 
@@ -127,7 +127,7 @@ public class ReLULayer extends Layer {
 
             }
 
-            //if a conv connected fc layer need to reshape the errors into a map stack
+            //if a conv connected fc layer need to reshape the errors into a plane stack
             if(((FullyConnectedLayer)nextLayer).connectedToConvLayer == true){
                 errors = ReshapeError(errors);
             }
@@ -140,13 +140,13 @@ public class ReLULayer extends Layer {
 
 
     private double[][][][] ReshapeError(double[][][][] errors){
-        double[][][][] reshapeErrors = new double[Layer.getBatchSize()][previousLayer.getOutputMaps()[0].length][previousLayer.getOutputMaps()[0][0].getWidth()][previousLayer.getOutputMaps()[0][0].getHeight()];
+        double[][][][] reshapeErrors = new double[Layer.getBatchSize()][previousLayer.getOutputPlanes()[0].length][previousLayer.getOutputPlanes()[0][0].getWidth()][previousLayer.getOutputPlanes()[0][0].getHeight()];
 
         for(int batchElement = 0; batchElement< Layer.getBatchSize(); batchElement++){
-            for(int mapDepth=0;mapDepth<previousLayer.getOutputMaps()[0].length;mapDepth++){
-                for(int mapWidth=0;mapWidth<previousLayer.getOutputMaps()[0][0].getWidth();mapWidth++){
-                    for(int mapHeight=0;mapHeight<previousLayer.getOutputMaps()[0][0].getHeight();mapHeight++){
-                        reshapeErrors[batchElement][mapDepth][mapWidth][mapHeight] = errors[batchElement][0][mapDepth+mapWidth+mapHeight][0];
+            for(int planeDepth = 0; planeDepth<previousLayer.getOutputPlanes()[0].length; planeDepth++){
+                for(int planeWidth = 0; planeWidth<previousLayer.getOutputPlanes()[0][0].getWidth(); planeWidth++){
+                    for(int planeHeight = 0; planeHeight<previousLayer.getOutputPlanes()[0][0].getHeight(); planeHeight++){
+                        reshapeErrors[batchElement][planeDepth][planeWidth][planeHeight] = errors[batchElement][0][planeDepth+planeWidth+planeHeight][0];
                     }
                 }
             }

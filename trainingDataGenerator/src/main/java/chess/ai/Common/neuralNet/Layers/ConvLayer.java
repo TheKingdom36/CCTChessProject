@@ -1,7 +1,7 @@
 package chess.ai.Common.neuralNet.Layers;
 
 import chess.ai.Common.neuralNet.Models.Kernel;
-import chess.ai.Common.neuralNet.Models.plane;
+import chess.ai.Common.neuralNet.Models.Plane;
 
 public class ConvLayer extends Layer {
     private int numOfKernels;
@@ -43,7 +43,7 @@ public class ConvLayer extends Layer {
 
         previousLayer.CalculateOutputplanes();
 
-        plane[][] inputplanes = previousLayer.outputplanes;
+        Plane[][] inputplanes = previousLayer.outputplanes;
 
         if(kernels==null){
             System.out.println("In kernels");
@@ -55,11 +55,11 @@ public class ConvLayer extends Layer {
         }
 
 
-        outputplanes = new plane[Layer.getBatchSize()][numOfKernels];
+        outputplanes = new Plane[Layer.getBatchSize()][numOfKernels];
 
         for(int i = 0; i< Layer.getBatchSize(); i++){
             for(int j=0;j<kernels.length;j++){
-                this.outputplanes[i][j] = new plane((inputplanes[0][0].getWidth()- kernels[0].getWidth()/stride)+1,(inputplanes[0][0].getHeight()- kernels[0].getHeight()/stride)+1);
+                this.outputplanes[i][j] = new Plane((inputplanes[0][0].getWidth()- kernels[0].getWidth()/stride)+1,(inputplanes[0][0].getHeight()- kernels[0].getHeight()/stride)+1);
             }
         }
 
@@ -129,7 +129,7 @@ public class ConvLayer extends Layer {
                             for(int errorWidth = 0; errorWidth<(errors[batchElement][kernelNum].length)-2; errorWidth++){
                                                                                                     //2=the kernel height-1
                                 for(int errorHeight = 0; errorHeight<(errors[batchElement][kernelNum][0].length)-2; errorHeight++) {
-                                 cal += errors[batchElement][kernelNum][errorWidth][errorHeight] * previousLayer.getOutputplanes()[batchElement][kernelDepth].getValues()[errorWidth + (1 + width)][errorHeight + (1+height)];
+                                 cal += errors[batchElement][kernelNum][errorWidth][errorHeight] * previousLayer.getOutputPlanes()[batchElement][kernelDepth].getValues()[errorWidth + (1 + width)][errorHeight + (1+height)];
                                 }
                             }
 

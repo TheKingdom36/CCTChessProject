@@ -15,8 +15,8 @@ import java.util.Map;
 public class PieceFactory {
 
     //TODO create two piece lists
-    static Map<Type, Piece> pieceWhiteMap = new HashMap<>();
-    static Map<Type, Piece> pieceBlackMap = new HashMap<>();
+    static Map<Type, Piece> pieceWhiteplane = new HashMap<>();
+    static Map<Type, Piece> pieceBlackplane = new HashMap<>();
 
     public PieceFactory(){
     }
@@ -24,17 +24,17 @@ public class PieceFactory {
     public static Piece getPiece(Type type, Color color)  {
 
         if(color == Color.White) {
-            if (pieceWhiteMap.containsKey(type) == false) {
-                pieceWhiteMap.put(type, CreatePiece(type, Color.White));
+            if (pieceWhiteplane.containsKey(type) == false) {
+                pieceWhiteplane.put(type, CreatePiece(type, Color.White));
             }
 
-            return pieceWhiteMap.get(type);
+            return pieceWhiteplane.get(type);
         }else {
-            if (pieceBlackMap.containsKey(type) == false) {
-                pieceBlackMap.put(type, CreatePiece(type, Color.Black));
+            if (pieceBlackplane.containsKey(type) == false) {
+                pieceBlackplane.put(type, CreatePiece(type, Color.Black));
             }
 
-            return pieceBlackMap.get(type);
+            return pieceBlackplane.get(type);
         }
 
 

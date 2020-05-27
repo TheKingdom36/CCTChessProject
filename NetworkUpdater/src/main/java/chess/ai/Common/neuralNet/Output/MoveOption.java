@@ -3,6 +3,9 @@ package chess.ai.Common.neuralNet.Output;
 
 import chess.ai.Common.ChessBoard.Models.Position;
 
+/**
+ * Defines a move option on a chessBoard
+ */
 public class MoveOption {
      Position piecePos;
      Position direction;

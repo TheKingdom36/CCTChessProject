@@ -123,7 +123,6 @@ public class State {
     }
 
     public State[] getAllPossibleStates() {
-
                                                                     //Board is always from white persepective
         List<Move> moves = boardState.getBoard().GetAllAvailableMoves(Color.White);
         State[] states = new State[State.getMovesOptions().size()];

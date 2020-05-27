@@ -3,6 +3,7 @@ package chess.ai.Common.Redis;
 
 
 import chess.ai.Common.neuralNet.Models.NetworkWeights;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
@@ -19,7 +20,8 @@ class RedisConfiguration {
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
 
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(chess.ai.Configuration.prop.get("RedisDatabaseIP").toString(), Integer.parseInt(chess.ai.Configuration.prop.get("RedisDatabasePort").toString()));
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(chess.ai.Configuration.prop.get("RedisDatabaseIP").toString(),
+                Integer.parseInt(chess.ai.Configuration.prop.get("RedisDatabasePort").toString()));
         return new JedisConnectionFactory(config);
     }
 
@@ -32,26 +34,35 @@ class RedisConfiguration {
     }
 
 /*
+Used only for subscribing
     @Bean
     RedisMessageListenerContainer redisContainer() {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(messageListener(), topic());
         return container;
+
+          @Autowired
+  NetworkChangesListener networkChangesListener;
+
+   @Bean
+    MessageListenerAdapter messageListener() {
+        return new MessageListenerAdapter(networkChangesListener);
     }
-*/
-    @Bean
-    ChannelTopic topic() {
-        return new ChannelTopic("NetworkWeights");
-    }
+    }*/
+
 
     @Bean
     RedisMessagePublisher redisPublisher() {
         return new RedisMessagePublisher(redisTemplate(), topic());
     }
 
+
+
+
+
     @Bean
-    MessageListenerAdapter messageListener() {
-        return new MessageListenerAdapter(new RedisMessageSubscriber());
+    ChannelTopic topic() {
+        return new ChannelTopic("NetworkWeights");
     }
 }

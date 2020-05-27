@@ -2,14 +2,14 @@ package chess.ai.Common.neuralNet.Layers;
 
 
 import chess.ai.Common.neuralNet.Models.Kernel;
-import chess.ai.Common.neuralNet.Models.Map;
+import chess.ai.Common.neuralNet.Models.Plane;
 
 public class InputLayer extends Layer {
 
 
 
-    public InputLayer(Map[][] maps){
-        this.outputMaps = maps;
+    public InputLayer(Plane[][] Planes){
+        this.outputplanes = Planes;
 
     }
 
@@ -20,8 +20,8 @@ public class InputLayer extends Layer {
     }
 
     @Override
-    public void CalculateOutputMaps() {
-        //Does nothing no operation required on input map
+    public void CalculateOutputplanes() {
+        //Does nothing no operation required on input plane
 
     }
 
